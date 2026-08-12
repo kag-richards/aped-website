@@ -28,10 +28,13 @@
     var html = '', inList = false;
     function inline(t) {
       t = esc(t);
-      // External links (http/https) open in a new tab; internal ones (/news/...)
-      // stay in the same tab so posts can link to pages on this site.
-      t = t.replace(/\[([^\]]+)\]\((https?:[^)\s]+|\/[^)\s]*)\)/g, function (_m, label, url) {
-        var external = /^https?:/.test(url);
+      // External links (http/https) open in a new tab; internal ones
+      // (news/educating-a-girl/) stay in the same tab so posts can link to
+      // pages on this site. Any other scheme (javascript:, data:) is left as
+      // plain text rather than turned into a link.
+      t = t.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function (whole, label, url) {
+        var external = /^https?:/i.test(url);
+        if (!external && /^[a-z][a-z0-9+.-]*:/i.test(url)) return whole;
         return '<a href="' + url + '"' + (external ? ' target="_blank" rel="noopener"' : '') + '>' + label + '</a>';
       });
       t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
