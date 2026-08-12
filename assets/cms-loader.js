@@ -28,7 +28,12 @@
     var html = '', inList = false;
     function inline(t) {
       t = esc(t);
-      t = t.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+      // External links (http/https) open in a new tab; internal ones (/news/...)
+      // stay in the same tab so posts can link to pages on this site.
+      t = t.replace(/\[([^\]]+)\]\((https?:[^)\s]+|\/[^)\s]*)\)/g, function (_m, label, url) {
+        var external = /^https?:/.test(url);
+        return '<a href="' + url + '"' + (external ? ' target="_blank" rel="noopener"' : '') + '>' + label + '</a>';
+      });
       t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
       t = t.replace(/\*([^*]+)\*/g, '<em>$1</em>');
       return t;
