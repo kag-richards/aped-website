@@ -909,22 +909,10 @@
       <h2>Stay close to the mission.</h2>
       <p>Quarterly updates, field stories, and project milestones, delivered to you.</p>
     </div>
-    <div class="newsletter-form">
-      <iframe
-        src="https://api.leadconnectorhq.com/widget/form/YNXhT81vj1FwAT0LHUii"
-        style="width:100%;max-width:480px;height:433px;border:none;border-radius:8px;background:transparent;"
-        id="inline-YNXhT81vj1FwAT0LHUii-home"
-        data-layout='{"id":"INLINE"}'
-        data-trigger-type="alwaysShow"
-        data-activation-type="alwaysActivated"
-        data-deactivation-type="neverDeactivate"
-        data-form-name="APED Newsletter Signup"
-        data-height="433"
-        data-layout-iframe-id="inline-YNXhT81vj1FwAT0LHUii-home"
-        data-form-id="YNXhT81vj1FwAT0LHUii"
-        title="APED Newsletter Signup">
-      </iframe>
-    </div>
+    <form class="newsletter-form" data-ls-form="lwq6BdFgS6AoJDZUUkNE" novalidate>
+        <input type="email" class="newsletter-input" name="Email" data-ls-field="email" placeholder="your@email.com" aria-label="Email address" required>
+        <button type="submit" class="newsletter-btn">Keep me posted</button>
+      </form>
   </div>
 </div>
 
@@ -1050,22 +1038,10 @@
 
   <div class="newsletter" style="background:var(--off-white)">
     <div class="newsletter-text"><h2 style="color:var(--blue)">Stay close to the work.</h2><p style="color:var(--gray-500)">Field updates, milestones, and stories from the Avé Prefecture.</p></div>
-    <div class="newsletter-form">
-      <iframe
-        src="https://api.leadconnectorhq.com/widget/form/YNXhT81vj1FwAT0LHUii"
-        style="width:100%;max-width:480px;height:433px;border:none;border-radius:8px;background:transparent;"
-        id="inline-YNXhT81vj1FwAT0LHUii-about"
-        data-layout='{"id":"INLINE"}'
-        data-trigger-type="alwaysShow"
-        data-activation-type="alwaysActivated"
-        data-deactivation-type="neverDeactivate"
-        data-form-name="APED Newsletter Signup"
-        data-height="433"
-        data-layout-iframe-id="inline-YNXhT81vj1FwAT0LHUii-about"
-        data-form-id="YNXhT81vj1FwAT0LHUii"
-        title="APED Newsletter Signup">
-      </iframe>
-    </div>
+    <form class="newsletter-form" data-ls-form="lwq6BdFgS6AoJDZUUkNE" novalidate>
+        <input type="email" class="newsletter-input" name="Email" data-ls-field="email" placeholder="your@email.com" aria-label="Email address" required>
+        <button type="submit" class="newsletter-btn">Keep me posted</button>
+      </form>
   </div>
   <footer style="background:var(--gray-900);padding:40px 80px"><div class="footer-bottom" style="border:none;padding:0"><p>© 2026 APED Association. All rights reserved.</p><a href="#" onclick="showPage('home')" style="color:rgba(255,255,255,0.35);font-size:13px;text-decoration:none">← Back to Home</a></div></footer>
 </div>
@@ -1662,10 +1638,13 @@ function goDonate() {
     if (!el) {
       el = document.createElement('p');
       el.className = 'form-notice';
-      el.style.cssText = 'margin-top:14px;font-size:14px;line-height:1.6;';
+      el.style.cssText = 'margin-top:14px;font-size:14px;line-height:1.6;flex-basis:100%;';
       form.appendChild(el);
     }
-    el.style.color = ok ? 'var(--teal)' : '#b3261e';
+    var onDark = form.classList.contains('newsletter-form');
+    el.style.color = ok
+      ? (onDark ? 'rgba(255,255,255,0.85)' : 'var(--teal)')
+      : (onDark ? 'var(--yellow)' : '#b3261e');
     el.innerHTML = text;
   }
 
@@ -1688,10 +1667,11 @@ function goDonate() {
           if (!res.ok) throw new Error('Request failed');
           return res.json();
         })
-        .then(function () {
+        .then(function (data) {
           form.reset();
           if (button) { button.disabled = true; button.textContent = 'Sent'; }
-          notice(form, 'Thank you. Your message has reached APED, and someone will reply by email.', true);
+          notice(form, (data && data.thankYouMessage) ||
+            'Thank you. Your message has reached APED, and someone will reply by email.', true);
         })
         .catch(function () {
           if (button) { button.disabled = false; button.textContent = label; }
@@ -1728,8 +1708,6 @@ window.addEventListener('hashchange', function () {
 });
 </script>
 
-<!-- GHL form embed loader (powers the newsletter signup iframes above) -->
-<script src="https://link.msgsndr.com/js/form_embed.js"></script>
 <!-- CMS content loader: renders Team, News, and editable copy from content/*.json -->
 <script src="assets/cms-loader.js" defer></script>
 </body>
